@@ -62,6 +62,7 @@ hr {
     align-items: center;
     background-color: #292929;
     opacity: 0.6;
+    margin-bottom: 30px;
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.6); }
     @media screen and (min-width: 700px) {
       .container .clock {
