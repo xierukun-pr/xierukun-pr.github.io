@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- 引入样式 -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.22.0/axios.min.js"
+      integrity="sha512-m2ssMAtdCEYGWXQ8hXVG4Q39uKYtbfaJL5QMTbhl2kc6vYyubrKHhr6aLLXW4ITeXSywQLn1AhsAaqrJl8Acfg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <style>
+        .img-box {
+            margin-top: 10px;
+            display: flex;
+        }
+        .img-content {
+            margin-right: 10px;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+     <template>
+        <el-tabs v-model="activeName">
+          <el-tab-pane label="随机头像" name="ql">
+           <div class="btn-box">
+            <el-select v-model="avatarValue" placeholder="请选择">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+             </el-select>
+            <el-button type="primary" @click="getAvatar">点我获取头像</el-button>
+         </div>
+         <div class="img-box">
+           <div class="img-content" v-for="u in avatarList" ::key="u">
+            <el-image :src="u"/>
+           </div>
+
+
+
+            <!-- <div class="img-content">
+                <el-image :src="qlImgList.img1"/>
+            </div>
+            <div class="img-content">
+                <el-image :src="qlImgList.img2"/>
+            </div> -->
+         </div>
+          </el-tab-pane>
+          <!-- <el-tab-pane label="配置管理" name="second">美女头像</el-tab-pane>
+          <el-tab-pane label="角色管理" name="third">角色管理</el-tab-pane>
+          <el-tab-pane label="定时任务补偿" name="fourth">定时任务补偿</el-tab-pane> -->
+        </el-tabs>
+      </template>
+
+
+    </div>
+  </body>
+  <!-- 引入组件库 -->
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script>
+    new Vue({
+      el: "#app",
+      data() {
+        return {
+            avatarValue:'情侣',
+            activeName:'ql',
+            options:[
+              {value:'情侣',label:'情侣头像'},
+              {value:'女',label:'美女头像'},
+              {value:'男',label:'帅哥头像'},
+              {value:'动漫',label:'动漫头像'}
+            ],
+            avatarList:[]
+        };
+      },
+      methods: {
+        getAvatar() {
+         axios.get(`https://api.iyk0.com/sjtx/?msg=${this.avatarValue}`).then(res=> {
+             let {data} = res || {}
+             const getKey = ['img1','img2','img']
+             const avatarList = []
+             if (data && data.code == 200) {
+                Object.keys(data).forEach(k=> {
+                  if (getKey.includes(k)) avatarList.push(data[k]);
+                })
+                this.avatarList = avatarList
+             }
+          })
+        },
+      },
+    });
+  </script>
+  
+</html>
