@@ -11,10 +11,6 @@
       href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"
     />
     <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
-      referrerpolicy="no-referrer"
-    ></script>
-    <script
       src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.22.0/axios.min.js"
       integrity="sha512-m2ssMAtdCEYGWXQ8hXVG4Q39uKYtbfaJL5QMTbhl2kc6vYyubrKHhr6aLLXW4ITeXSywQLn1AhsAaqrJl8Acfg=="
       crossorigin="anonymous"
@@ -50,9 +46,6 @@
            <div class="img-content" v-for="u in avatarList" ::key="u">
             <el-image :src="u"/>
            </div>
-
-
-
             <!-- <div class="img-content">
                 <el-image :src="qlImgList.img1"/>
             </div>
@@ -97,7 +90,10 @@
              const avatarList = []
              if (data && data.code == 200) {
                 Object.keys(data).forEach(k=> {
-                  if (getKey.includes(k)) avatarList.push(data[k]);
+                  if (data[k] && getKey.includes(k)) {
+                     let _u = data[k].substring(7)
+                     avatarList.push(`https://images.weserv.nl/?url=${_u}`);
+                  }  
                 })
                 this.avatarList = avatarList
              }
