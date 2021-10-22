@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <script src="https://unpkg.com/vue@next"></script>
+    <!-- import CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
+    <!-- import JavaScript -->
+    <script src="https://unpkg.com/element-plus"></script>
+    <script src="https://unpkg.com/axios"></script>
+    <title>恭喜发财</title>
+  </head>
+  <body>
+    <div id="app">
+      <el-button @click="add">{{a}}</el-button>
+    </div>
+    <script>
+      const App = {
+        setup(props, context) {
+            const {ref} = Vue
+            const instance = axios.create({
+              baseURL:'http://open.liupai.net',
+              headers:{
+              ['Content-Type']: 'application/json;charset=utf-8',
+              ['Access-Control-Allow-Credentials']: true,
+              ['Access-Control-Allow-Origin']: '*'   
+              }    
+            });
+            // instance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
+           const appkey='14fd67fdcbcc4c49'
+            let a = ref(1111);
+            
+            const add = () => {
+                instance.get('/lottery/class?appkey=14fd67fdcbcc4c49&cpid=13&issueno=',{appkey}).then(res=>{
+                   console.log(res)
+               })
+ 
+            } 
+
+
+            return {
+                a,
+                add
+            }
+        }
+
+
+        // data() {
+        //   return {
+        //     message: "Hello Element Plus",
+        //   };
+        // },
+      };
+      const app = Vue.createApp(App);
+      app.use(ElementPlus);
+      app.mount("#app");
+    </script>
+  </body>
+</html>
