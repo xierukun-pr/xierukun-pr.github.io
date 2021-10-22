@@ -15,23 +15,54 @@
       <el-button @click="add">{{a}}</el-button>
     </div>
     <script>
+     axios.jsonp = (url,data)=>{
+    if(!url)
+        throw new Error('url is necessary')
+    const callback = 'CALLBACK' + Math.random().toString().substr(9,18)
+    const JSONP = document.createElement('script')
+          JSONP.setAttribute('type','text/javascript')
+
+    const headEle = document.getElementsByTagName('head')[0]
+
+    let ret = '';
+    if(data){
+        if(typeof data === 'string')
+            ret = '&' + data;
+        else if(typeof data === 'object') {
+            for(let key in data)
+                ret += '&' + key + '=' + encodeURIComponent(data[key]);
+        }
+        ret += '&_time=' + Date.now();
+    }
+    JSONP.src = `${url}?callback=${callback}${ret}`;
+    return new Promise( (resolve,reject) => {
+        window[callback] = r => {
+          resolve(r)
+          headEle.removeChild(JSONP)
+          delete window[callback]
+        }
+        headEle.appendChild(JSONP)
+    })
+    
+}
+
       const App = {
         setup(props, context) {
             const {ref} = Vue
-            const instance = axios.create({
-              baseURL:'https://open.liupai.net',
-              headers:{
-              ['Content-Type']: 'application/json;charset=utf-8',
-              ['Access-Control-Allow-Credentials']: true,
-              ['Access-Control-Allow-Origin']: '*'   
-              }    
-            });
+            // const instance = axios.create({
+            //   baseURL:'https://open.liupai.net',
+            //   headers:{
+            //   ['Content-Type']: 'application/json;charset=utf-8',
+            //   ['Access-Control-Allow-Credentials']: true,
+            //   ['Access-Control-Allow-Origin']: '*'   
+            //   }    
+            // });
             // instance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
            const appkey='14fd67fdcbcc4c49'
             let a = ref(1111);
             
             const add = () => {
-                instance.get('/lottery/class?appkey=14fd67fdcbcc4c49&cpid=13&issueno=',{appkey}).then(res=>{
+              axios.jsonp('https://open.liupai.net/lottery/class',{appkey}).then(res=>{
                    console.log(res)
                })
  
